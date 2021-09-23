@@ -1,0 +1,19 @@
+{
+  "name": "agenda_de_eventos",
+  "version": "1.0.0",
+  "description": "Agenda para eventos escolares",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "William da Silva Oliveira",
+  "license": "MIT",
+  "devDependencies": {
+    "express": "^4.17.1"
+  },
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "mysql2": "^2.3.0",
+    "sequelize": "^6.6.5"
+  }
+}
