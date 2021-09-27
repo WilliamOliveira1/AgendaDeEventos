@@ -1,26 +1,29 @@
 <%- include('./partials/head') %>
-<body>
-    <div class="container">
-      <div class="row">
+    <div class="container" id="loginPage">
+      <div class="row" id="loginContainer">
         <h2>Sistema de Agendamento de eventos</h2>
         <div class="col">
-          <form class="">
+          <form class="" name="loginForm" action="/login/save" method="POST">
             <div class="form-group m-2">
-              <label class="m-2" for="InputEmail">Usuário</label>
-              <input type="email" class="form-control" id="InputUser" placeholder="Digite o usuário">
+              <label class="m-2" for="InputEmail">Nome</label>
+              <input type="text" class="form-control" id="InputName" placeholder="Digite seu nome" name="name">
             </div>
             <div class="form-group m-2">
-              <label for="InputPassword">Password</label>
-              <input type="password" class="form-control" id="InputPassword" placeholder="Senha">
+              <label class="m-2" for="InputEmail">Usuário</label>
+              <input type="text" class="form-control" id="InputUser" placeholder="Digite o usuário" name="user">
+            </div>
+            <div class="form-group m-2">
+              <label class="m-2" for="InputPassword">Password</label>
+              <input type="password" class="form-control" id="InputPassword" placeholder="Senha" name="password">
             </div>
             <div class="form-check m-2">
               <input type="checkbox" class="form-check-input" id="Check">
               <label class="form-check-label" for="Check">Lembrar</label>
-            </div>
-            <button type="submit" class="btn btn-primary m-2">Entrar</button>
-          </form>
+            </div>            
+            <button type="submit" id="loginButton" class="btn btn-primary m-2">Entrar</button>
+            <p class="small fw-bold m-0">Don't have an account?<a href="#!" class="link-danger">Register</a></p>
+          </form>          
         </div>        
       </div>      
-    </div> 
-</body>
+    </div>
 <%- include('partials/footer'); %>

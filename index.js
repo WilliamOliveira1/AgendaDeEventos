@@ -11,7 +11,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.render('index')
+    res.render('index');
 })
 
 app.listen(8080, (error) => {
@@ -21,3 +21,26 @@ app.listen(8080, (error) => {
     console.log("The server is running");
   }
 });
+
+
+//Rota da controller login
+const loginController = require("./controller/loginController");
+
+
+const login = require("./model/login/logins");
+
+
+// importando a connection do banco de dados
+const connection = require("./database/database");
+// Conectar com o banco de dados
+connection
+  .authenticate()
+  .then(() => {
+    console.log("Database connected!");
+  })
+  .catch((msgErro) => {
+    console.log("Error: " + msgErro);
+  });
+
+//Utilizando as rotas da controller
+app.use("/", loginController);

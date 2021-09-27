@@ -13,7 +13,17 @@
   },
   "dependencies": {
     "ejs": "^3.1.6",
-    "mysql2": "^2.3.0",
-    "sequelize": "^6.6.5"
-  }
+    "sequelize": "^6.6.5",
+    "sqlite3": "^5.0.2",
+    "tedious": "^12.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WilliamOliveira1/AgendaDeEventos.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/WilliamOliveira1/AgendaDeEventos/issues"
+  },
+  "homepage": "https://github.com/WilliamOliveira1/AgendaDeEventos#readme"
 }
