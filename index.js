@@ -14,6 +14,10 @@ app.get('/', (req, res) => {
     res.render('index');
 })
 
+app.get('/registration', (req, res) => {
+  res.render('registration');
+})
+
 app.listen(8080, (error) => {
   if(error) {
     console.error("The server caught an error: " + error);
@@ -25,8 +29,6 @@ app.listen(8080, (error) => {
 
 //Rota da controller login
 const loginController = require("./controller/loginController");
-
-
 const login = require("./model/login/logins");
 
 
