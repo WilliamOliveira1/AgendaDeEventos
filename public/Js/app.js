@@ -27,7 +27,7 @@ $("input").keyup(function(){
         $('#RegisterButton').prop('disabled', true);
     }
 
-    if(loginUserField.length >= 6 && loginPassField.length >= 8 )
+    if(loginUserField?.length >= 6 && loginPassField?.length >= 8 )
     {
         $('#loginButton').prop('disabled', false);
     }

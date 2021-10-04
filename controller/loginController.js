@@ -27,7 +27,7 @@ router.post("/login/save", (req,res) => {
                     email: email,
                     password: passBcryptHash,
                 }).then(() => {
-                    res.render('registration')
+                    res.redirect("/");
                 })
             }
             else {
