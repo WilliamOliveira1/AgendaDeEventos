@@ -16,6 +16,10 @@
             <p class="small fw-bold mb-2">Não tem uma conta?<a href="/registration" class="link-danger m-1">Cadastrar</a></p>
           </form>
         </div>
+        <% if(errorMessage == "true"){ %>
+          <div id="<%= idMessage %>" hidden>
+          </div>          
+        <% } %>
       </div>
-    </div>
+    </div>    
 <%- include('partials/footer'); %>

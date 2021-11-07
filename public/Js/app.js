@@ -1,4 +1,3 @@
-
 $("input").keyup(function(){
     let userField = $('#InputUser').val();
     let passField = $('#InputPassword').val();
@@ -110,3 +109,128 @@ function ValidateUser(inputText)
         $("#CheckUser").html("");
     }
 }
+
+toastr.options = {
+    "closeButton": true,
+    "debug": false,
+    "newestOnTop": true,
+    "progressBar": true,
+    "positionClass": "toast-top-full-width",
+    "preventDuplicates": true,
+    "showDuration": "90000",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "1000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+  }
+
+if ($('#userExist').length) {
+    toastr.error('Usuário ja existe tente outro!')
+}
+
+if ($('#userOrPass').length) {
+    toastr.error('Usuário ou senha errados por favor tente novamente!')
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        headerToolbar: {
+            end: 'today prev,next',
+            center: 'title',
+            start: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+        },
+        selectable: true,
+        selectHelper: true,
+        editable: true,
+        eventLimit: true,
+        navLinks: true,
+        selectMirror: true,
+        locale: 'pt',
+        timeZone: 'America/New_York',
+        events: [
+            { start: '2018-09-01T12:30:00Z' }, // will be parsed in UTC, as-is
+            { start: '2018-09-01T12:30:00+XX:XX' }, // will be parsed in UTC as '2018-09-01T12:30:00Z'
+            { start: '2018-09-01T12:30:00' } // will be parsed in UTC as '2018-09-01T12:30:00Z'
+        ],
+        dateClick: function (arg) {
+            console.log(arg.date.toUTCString()); // use *UTC* methods on the native Date Object
+            // will output something like 'Sat, 01 Sep 2018 00:00:00 GMT'
+        },
+
+        // Create new event
+    select: function (arg) {
+        Swal.fire({
+            html: '<div class="mb-7">Agendar novo evento?</div><div class="fw-bolder mb-5">Nome do evento:</div><input type="text" class="form-control" name="event_name" />',
+            icon: "info",
+            showCancelButton: true,
+            buttonsStyling: false,
+            confirmButtonText: "Sim, criar!",
+            cancelButtonText: "Não, voltar",
+            customClass: {
+                confirmButton: "btn btn-primary",
+                cancelButton: "btn btn-active-light"
+            }
+        }).then(function (result) {
+            if (result.value) {
+                var title = document.querySelector('input[name="event_name"]').value;
+                if (title) {
+                    calendar.addEvent({
+                        title: title,
+                        start: arg.start,
+                        end: arg.end,
+                        allDay: arg.allDay
+                    })
+                }
+                calendar.unselect()
+            } else if (result.dismiss === "cancel") {
+                Swal.fire({
+                    text: "Evento de agendamento não realizado!.",
+                    icon: "error",
+                    buttonsStyling: false,
+                    confirmButtonText: "Ok!",
+                    customClass: {
+                        confirmButton: "btn btn-primary",
+                    }
+                });
+            }
+        });
+    },
+
+    // Delete event
+    eventClick: function (arg) {
+        Swal.fire({
+            text: "Tem certeza que quer deletar esse evento?",
+            icon: "warning",
+            showCancelButton: true,
+            buttonsStyling: false,
+            confirmButtonText: "Sim, delete!",
+            cancelButtonText: "Não, voltar",
+            customClass: {
+                confirmButton: "btn btn-primary",
+                cancelButton: "btn btn-active-light"
+            }
+        }).then(function (result) {
+            if (result.value) {
+                arg.event.remove()
+            } else if (result.dismiss === "cancel") {
+                Swal.fire({
+                    text: "Evento não foi deletado!.",
+                    icon: "error",
+                    buttonsStyling: false,
+                    confirmButtonText: "Ok!",
+                    customClass: {
+                        confirmButton: "btn btn-primary",
+                    }
+                });
+            }
+        });
+    },
+    editable: true,
+    dayMaxEvents: true, // allow "more" link when too many events
+    });
+    calendar.render();
+});

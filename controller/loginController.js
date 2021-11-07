@@ -11,9 +11,9 @@ router.post("/login/save", (req,res) => {
     let password = req.body.password;
     let passBcryptHash = bcrypt.hashSync(password);
     let errorMessage;
+    let idMessage;
 
     if(!user || !password) {
-        errorMessage = "User and/or";
         console.error("User tried to save empty data!");
         res.redirect("/");
     }else{
@@ -31,8 +31,13 @@ router.post("/login/save", (req,res) => {
                 })
             }
             else {
-                console.log("User already exist")
-                res.redirect("/");
+                errorMessage = "true";
+                idMessage = "userExist"
+                console.log("User already exist");
+                res.render("registration", {
+                    errorMessage: errorMessage,
+                    idMessage: idMessage
+                });
             }
         });
     }
@@ -42,10 +47,10 @@ router.post("/login/check", (req,res) => {
     let user     = req.body.user;
     let password = req.body.password;
     let errorMessage;
+    let idMessage;
     
 
     if(!user || !password) {
-        errorMessage = "User and/or";
         console.error("User tried to save empty data!");
         res.redirect("/");
     }else{
@@ -62,23 +67,28 @@ router.post("/login/check", (req,res) => {
                     const isValid = bcrypt.compareSync(password, obj.password);
                     console.log(isValid);
                     if(isValid) {
-                        res.send("User exist!");
+                        res.render("agenda");
                     }else {
-                        res.redirect("/");
+                        errorMessage = "true";
+                        idMessage = "userOrPass"
+                        res.render("index", {
+                            errorMessage: errorMessage,
+                            idMessage: idMessage
+                        });
                     }                    
                 });                                
             }
             else {
+                errorMessage = "true";
+                idMessage = "userOrPass"
                 console.log("Login do no exist!");
-                res.redirect("/");
+                res.render("index", {
+                    errorMessage: errorMessage,
+                    idMessage: idMessage
+                });
             }
         });
     }
 });
-
-/*router.post('/login/check', passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/registration'
-}))*/
 
 module.exports = router;

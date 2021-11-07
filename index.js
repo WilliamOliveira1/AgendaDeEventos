@@ -1,6 +1,9 @@
 // importando o express
 const express = require('express');
 const app = express();
+const Swal = require('sweetalert2')
+
+
 
 //Setar o EJS para renderizar o HTML
 app.set('view engine', 'ejs');
@@ -11,11 +14,17 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.render('index');
+  let errorMessage = "false";
+  res.render('index', {
+    errorMessage: errorMessage
+  });
 })
 
 app.get('/registration', (req, res) => {
-  res.render('registration');
+  let errorMessage = "false";
+  res.render('registration', {
+    errorMessage: errorMessage
+  });
 })
 
 app.listen(8080, (error) => {
