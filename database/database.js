@@ -1,6 +1,6 @@
 var Sequelize = require('sequelize');
 
-var connection  = new Sequelize('agendapi', 'saowioli', '1çW-=45A', {
+var connection  = new Sequelize('agendapi', 'user', 'pass', {
   host: 'agendapi.database.windows.net',
   dialect: 'mssql',
   driver: 'tedious',

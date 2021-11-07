@@ -135,6 +135,14 @@ if ($('#userOrPass').length) {
     toastr.error('Usuário ou senha errados por favor tente novamente!')
 }
 
+if ($('#userOrPassEmptyLogin').length) {
+    toastr.error('Preencher os campos usuario e senha e tente novamente!')
+}
+
+if ($('#userOrPassEmptyCad').length) {
+    toastr.error('Não é possivel salvar com os campos usuario e senha vazios! Tente novamente.')
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {

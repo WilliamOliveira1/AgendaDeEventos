@@ -1,9 +1,6 @@
 // importando o express
 const express = require('express');
 const app = express();
-const Swal = require('sweetalert2')
-
-
 
 //Setar o EJS para renderizar o HTML
 app.set('view engine', 'ejs');

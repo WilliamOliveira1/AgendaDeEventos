@@ -14,8 +14,13 @@ router.post("/login/save", (req,res) => {
     let idMessage;
 
     if(!user || !password) {
+        errorMessage = "true";
+        idMessage = "userOrPassEmptyCad"
         console.error("User tried to save empty data!");
-        res.redirect("/");
+        res.render("index", {
+            errorMessage: errorMessage,
+            idMessage: idMessage
+        });
     }else{
         //First we check if the user exist
         Login.count({ where: { user: user } }).then(count => {
@@ -51,8 +56,13 @@ router.post("/login/check", (req,res) => {
     
 
     if(!user || !password) {
+        errorMessage = "true";
+        idMessage = "userOrPassEmptyLogin"
         console.error("User tried to save empty data!");
-        res.redirect("/");
+        res.render("index", {
+            errorMessage: errorMessage,
+            idMessage: idMessage
+        });
     }else{
         //First we check if the user exist 
         Login.count({ where: { user: user } }).then(count => {
