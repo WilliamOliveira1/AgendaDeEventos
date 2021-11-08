@@ -10,15 +10,15 @@ router.post("/login/save", (req,res) => {
     let email     = req.body.email;
     let password = req.body.password;
     let passBcryptHash = bcrypt.hashSync(password);
-    let errorMessage;
+    let message;
     let idMessage;
 
     if(!user || !password) {
-        errorMessage = "true";
+        message = "true";
         idMessage = "userOrPassEmptyCad"
         console.error("User tried to save empty data!");
         res.render("index", {
-            errorMessage: errorMessage,
+            message: message,
             idMessage: idMessage
         });
     }else{
@@ -31,16 +31,22 @@ router.post("/login/save", (req,res) => {
                     user: user,
                     email: email,
                     password: passBcryptHash,
-                }).then(() => {
-                    res.redirect("/");
+                }).then(() => {                
+                    message = "true";
+                    idMessage = "userCreated"
+                    console.error("User account saved!");
+                    res.render("index", {
+                        message: message,
+                        idMessage: idMessage
+                    });
                 })
             }
             else {
-                errorMessage = "true";
+                message = "true";
                 idMessage = "userExist"
                 console.log("User already exist");
                 res.render("registration", {
-                    errorMessage: errorMessage,
+                    message: message,
                     idMessage: idMessage
                 });
             }
@@ -51,16 +57,16 @@ router.post("/login/save", (req,res) => {
 router.post("/login/check", (req,res) => {
     let user     = req.body.user;
     let password = req.body.password;
-    let errorMessage;
+    let message;
     let idMessage;
     
 
     if(!user || !password) {
-        errorMessage = "true";
+        message = "true";
         idMessage = "userOrPassEmptyLogin"
         console.error("User tried to save empty data!");
         res.render("index", {
-            errorMessage: errorMessage,
+            message: message,
             idMessage: idMessage
         });
     }else{
@@ -79,21 +85,21 @@ router.post("/login/check", (req,res) => {
                     if(isValid) {
                         res.render("agenda");
                     }else {
-                        errorMessage = "true";
+                        message = "true";
                         idMessage = "userOrPass"
                         res.render("index", {
-                            errorMessage: errorMessage,
+                            message: message,
                             idMessage: idMessage
                         });
                     }                    
                 });                                
             }
             else {
-                errorMessage = "true";
+                message = "true";
                 idMessage = "userOrPass"
                 console.log("Login do no exist!");
                 res.render("index", {
-                    errorMessage: errorMessage,
+                    message: message,
                     idMessage: idMessage
                 });
             }

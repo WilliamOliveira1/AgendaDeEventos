@@ -143,6 +143,10 @@ if ($('#userOrPassEmptyCad').length) {
     toastr.error('Não é possivel salvar com os campos usuario e senha vazios! Tente novamente.')
 }
 
+if ($('#userCreated').length) {
+    toastr.success('Usuário criado com sucesso!')
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
