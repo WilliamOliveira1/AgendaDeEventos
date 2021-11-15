@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const router = express.Router();
-const Login = require("../model/login/logins");
+const Login = require("../../model/login/logins");
 const bcrypt = require('bcryptjs');
 const { application } = require("express");
 
@@ -59,7 +59,6 @@ router.post("/login/check", (req,res) => {
     let password = req.body.password;
     let message;
     let idMessage;
-    
 
     if(!user || !password) {
         message = "true";

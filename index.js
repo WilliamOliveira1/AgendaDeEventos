@@ -11,16 +11,16 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  let errorMessage = "false";
+  let message = "false";
   res.render('index', {
-    errorMessage: errorMessage
+    message: message
   });
 })
 
 app.get('/registration', (req, res) => {
-  let errorMessage = "false";
+  let message = "false";
   res.render('registration', {
-    errorMessage: errorMessage
+    message: message
   });
 })
 
@@ -34,7 +34,8 @@ app.listen(8080, (error) => {
 
 
 //Rota da controller login
-const loginController = require("./controller/loginController");
+const loginController = require("./controller/Login/loginController");
+const agendaController = require("./controller/Agenda/agendaController");
 const login = require("./model/login/logins");
 
 
@@ -52,3 +53,6 @@ connection
 
 //Utilizando as rotas da controller
 app.use("/", loginController);
+
+//Utilizando as rotas da controller
+app.use("/", agendaController);
