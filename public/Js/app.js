@@ -97,7 +97,7 @@ toastr.options = {
     "debug": false,
     "newestOnTop": true,
     "progressBar": true,
-    "positionClass": "toast-top-full-width",
+    "positionClass": "toast-bottom-full-width",
     "preventDuplicates": true,
     "showDuration": "90000",
     "hideDuration": "1000",
@@ -128,6 +128,19 @@ if ($('#userOrPassEmptyCad').length) {
 if ($('#userCreated').length) {
     toastr.success('Usuário criado com sucesso!')
 }
+
+if ($('#roomCreated').length) {
+    toastr.success('Sala criada com sucesso!')
+}
+
+if ($('#roomEmpty').length) {
+    toastr.error('Não pode salvar dado vazio!')
+}
+
+if ($('#roomExist').length) {
+    toastr.success('Ja existe uma sala com esse nome! Salve com outro nome.')
+}
+
 getAllEvents();
 
 function initCalendar(data) {
@@ -189,8 +202,7 @@ function loadCalendar(calendarEvents) {
             // Create new event
             select: function (arg) {
                 Swal.fire({
-                    html: '<div class="mb-7">Agendar novo evento?</div><div class="fw-bolder mb-5">Nome do evento:</div><input type="text" class="form-control" name="event_name" />' +
-                        '<div class="fw-bolder mb-5">Nome do evento:</div> <input type="text" class="form-control mt-2" name="event_url" />',
+                    html: `<div class="mb-7">Agendar novo evento?</div><div class="fw-bolder mb-5">Nome do evento:</div><select id="eventSelect">${eventsSaved}</select>`,
                     icon: "info",
                     showCancelButton: true,
                     buttonsStyling: false,
@@ -202,8 +214,7 @@ function loadCalendar(calendarEvents) {
                     }
                 }).then(function (result) {
                     if (result.value) {
-                        var title = document.querySelector('input[name="event_name"]').value;
-                        var url = document.querySelector('input[name="event_url"]').value;
+                        var title = document.querySelector('input[name="event_name"]').value;                        
                         let calendarData = {
                             title: title,
                             start: arg.start,
@@ -277,14 +288,55 @@ function loadCalendar(calendarEvents) {
 //TODO adicionar salas de aula no banco de dados
 function renderclassRoomList(escola) {
 
-    let lines = "";
+    if(escola.length <= 0) {
+        toastr.error('Não tem salas cadastradas, por favor cadastre salas para salvar eventos.')
+    }else {
+        let lines = "";
     for (var i = 0; i < escola.length; i++) {
-        lines += `<option value="sala${i+1}">${escola[i]}</option>`;
+        lines += `<option value="sala${i+1}">${escola[i].Nome}</option>`;
     }
 
-    return lines;
+    $("#roomSelect").append(lines);
+    }    
 }
 
-const escola = [ "Sala01", "Sala02", "Sala03", "Sala04", "Sala05", "Sala06"]
-droplist = renderclassRoomList(escola);
-$("#roomSelect").append(droplist);
+//TODO adicionar salas de aula no banco de dados
+var eventsSaved = null;
+
+function renderEventsList(eventos) {
+
+    if(eventos.length <= 0) {
+        toastr.error('Não tem Eventos cadastrados, por favor cadastre eventos na aba dashboard.')
+    }else {
+        let lines = "";
+    for (var i = 0; i < eventos.length; i++) {
+        lines += `<option name="event_name" value="sala${i+1}">${eventos[i].event}</option>`;
+    }
+
+    $("#eventSelect").append(lines);
+    eventsSaved = lines;
+    }    
+}
+
+function getAllRooms() {
+    $.ajax({
+        url: `${BaseApiUrl()}/api/getallrooms`,
+        type: "GET",
+        dataType: 'json'
+    }).done(function (data) {
+        return renderclassRoomList(data);
+    })
+}
+
+function getAllEventsList() {
+    $.ajax({
+        url: `${BaseApiUrl()}/api/getallevents`,
+        type: "GET",
+        dataType: 'json'
+    }).done(function (data) {
+        return renderEventsList(data);
+    })
+}
+getAllEventsList();
+
+getAllRooms();

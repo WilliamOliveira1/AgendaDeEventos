@@ -63,11 +63,11 @@ app.listen(8080, (error) => {
 });
 
 
-//Rota da controller login
+//Rota das controllers
 const loginController = require("./controller/Login/loginController");
 const agendaController = require("./controller/Agenda/agendaController");
-const login = require("./model/login/logins");
-
+const roomsController = require("./controller/Salas/roomsController");
+const eventsController = require("./controller/Events/eventsController");
 
 // importando a connection do banco de dados
 const connection = require("./database/database");
@@ -86,3 +86,9 @@ app.use("/", loginController);
 
 //Utilizando as rotas da controller
 app.use("/", agendaController);
+
+//Utilizando as rotas da controller
+app.use("/", roomsController);
+
+//Utilizando as rotas da controller
+app.use("/", eventsController);
