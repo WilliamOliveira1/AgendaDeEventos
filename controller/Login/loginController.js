@@ -4,6 +4,8 @@ const router = express.Router();
 const Login = require("../../model/login/logins");
 const bcrypt = require('bcryptjs');
 const { application } = require("express");
+const jwt = require('jsonwebtoken');
+const authCheck = require('../../middleware/loginCheck')
 
 router.post("/login/save", (req,res) => {
     let user     = req.body.user;
@@ -82,7 +84,17 @@ router.post("/login/check", (req,res) => {
                     const isValid = bcrypt.compareSync(password, obj.password);
                     console.log(isValid);
                     if(isValid) {
-                        res.render("agenda");
+                        let token = jwt.sign({
+                            id_usuario: obj.id,
+                            email: obj.email
+                        }, 
+                        process.env.JWT_KEY,
+                        {
+                            expiresIn: "1h"
+                        });                        
+                        console.log(token);
+                        res.setHeader('Authorization', `Bearer ${token}`)
+                        res.status(200).render('agenda');
                     }else {
                         message = "true";
                         idMessage = "userOrPass"

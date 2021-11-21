@@ -1,10 +1,19 @@
 // importando o express
 const express = require('express');
 const app = express();
+const jwt = require('jsonwebtoken');
+const authCheck = require('./middleware/loginCheck')
 
 //Setar o EJS para renderizar o HTML
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
+
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', "Content-Type, Authorization");
+  res.header('Authorization', "");
+  next();
+});
 
 // Configurar o body-parser
 app.use(express.urlencoded({extended: false}));
@@ -20,6 +29,27 @@ app.get('/', (req, res) => {
 app.get('/registration', (req, res) => {
   let message = "false";
   res.render('registration', {
+    message: message
+  });
+})
+
+app.get('/home', (req, res) => {
+  let message = "false";
+  res.render('agenda', {
+    message: message
+  });
+})
+
+app.get('/agenda', (req, res) => {
+  let message = "false";
+  res.render('agenda', {
+    message: message
+  });
+})
+
+app.get('/dashboard', (req, res) => {
+  let message = "false";
+  res.render('dashboard', {
     message: message
   });
 })

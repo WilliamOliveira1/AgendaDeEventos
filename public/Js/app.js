@@ -139,14 +139,11 @@ function saveData(args) {
         $.ajax({
             url: `${BaseApiUrl()}/agenda/save`,
             type: "POST",
-            data: args,
-            success: function(data){
-                console.log(data);
-            }
+            data: args            
         }).then(response => {
-            console.log("Pass!");
+            console.log("Event saved!");
         }).catch(error => {
-            console.error("Exceção!");
+            console.error(error);
         }) ;
 }
 
@@ -276,3 +273,18 @@ function loadCalendar(calendarEvents) {
         calendar.render();
     });   
 }
+
+//TODO adicionar salas de aula no banco de dados
+function renderclassRoomList(escola) {
+
+    let lines = "";
+    for (var i = 0; i < escola.length; i++) {
+        lines += `<option value="sala${i+1}">${escola[i]}</option>`;
+    }
+
+    return lines;
+}
+
+const escola = [ "Sala01", "Sala02", "Sala03", "Sala04", "Sala05", "Sala06"]
+droplist = renderclassRoomList(escola);
+$("#roomSelect").append(droplist);

@@ -1,6 +1,39 @@
 <%- include('./partials/headAgenda') %>
-    <div id='calendar'></div>
-    <form class="" name="loginForm" action="/agenda/save" method="POST">
-        <button type="submit" id="RegisterButton" class="btn btn-primary m-2">Cadastrar</button>
-    </form>
+    <input type="checkbox" id="check">
+    <label for="check">
+        <i class="fas fa-bars" id="btn"></i>
+        <i class="fas fa-times" id="cancel"></i>
+    </label>
+    <div class="sidebar">
+        <header id="header">Agenda de eventos</header>
+        <a href="/dashboard">
+            <i class="fas fa-qrcode" data-mdb-toggle="tooltip" data-mdb-placement="top" title="Dashboard"></i>
+            <span id="painelControle">Painel de controle</span>
+        </a>
+        <a href="/agenda" class="active">
+            <i class="fas fa-calendar" data-mdb-toggle="tooltip" data-mdb-placement="top" title="Events"></i>
+            <span id="events">Eventos</span>
+        </a>
+        <a href="#">
+            <i class="fas fa-stream" data-mdb-toggle="tooltip" data-mdb-placement="top" title="Overview"></i>
+            <span id="overview">Overview</span>
+        </a>
+        <a href="#">
+            <i class="fas fa-address-card" data-mdb-toggle="tooltip" data-mdb-placement="top" title="Perfil"></i>            
+            <span id="perfil">Perfil</span>
+        </a>
+        <a href="#">
+            <i class="far fa-question-circle" data-mdb-toggle="tooltip" data-mdb-placement="top"
+                title="About"></i>
+            <span id="about">Sobre</span>
+        </a>
+    </div>
+    <main class="ml-4 mr-0">
+        <div id="rooms">
+            <label class="mr-2" for="rooms-select">Escolha onde agendar evento:</label>
+            <select name="rooms-select" id="roomSelect">
+            </select>
+        </div>        
+        <div id='calendar'></div>
+    </main>
 <%- include('partials/footer'); %>

@@ -3,9 +3,11 @@ const app = express();
 const router = express.Router();
 const Agenda = require("../../model/Agenda/agenda");
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { application } = require("express");
+const authCheck = require('../../middleware/loginCheck')
 
-router.post("/agenda/save", (req, res) => {
+router.post("/agenda/save", authCheck, (req, res) => {
     let title = req.body.title;
     let start = req.body.start;
     let end = req.body.end;

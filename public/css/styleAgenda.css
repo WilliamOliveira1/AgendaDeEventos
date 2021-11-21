@@ -1,34 +1,131 @@
 #agendaBody {
-  margin-top: 50px;
   background-color: rgb(255, 255, 255);
 }
 
 #calendar {
-  max-width: 55%;
+  max-width: 45%;
   margin: 0 auto;
 }
 
-@media only screen and (min-width: 2000px) {
-  #calendar {
-    max-width: 70%;
-  }
-}
-
-@media only screen and (min-width: 1750px) {
-  #calendar {
-    max-width: 65%;
-  }
-}
-
-@media only screen and (min-width: 1500px) {
-  #calendar {
-    max-width: 60%;
-  }
-}
-
-@media screen and (max-width:1500px) { .fc-toolbar.fc-header-toolbar {font-size: 95%} .fc-toolbar-title {font-size: 95%} #calendar {max-width: 75%;}}
-@media screen and (max-width:1000px) { .fc-toolbar.fc-header-toolbar {font-size: 70%} .fc-toolbar-title {font-size: 70%} #calendar {max-width: 80%;}}
-@media screen and (max-width:767px) { .fc-toolbar.fc-header-toolbar {font-size: 60%} .fc-toolbar-title {font-size: 60%} #calendar {max-width: 85%;}}
+@media screen and (max-width:1500px) { .fc-toolbar.fc-header-toolbar {font-size: 85%} .fc-toolbar-title {font-size: 95%} #calendar {max-width: 60%;}}
+@media screen and (max-width:1000px) { 
+  .fc-toolbar.fc-header-toolbar {font-size: 70%} .fc-toolbar-title {font-size: 70%} #calendar {max-width: 80%;} .sidebar {width: 50px;} 
+  #perfil , #about , #events , #overview , #painelControle {display: none;}}
+@media screen and (max-width:767px) { .fc-toolbar.fc-header-toolbar {font-size: 60%} .fc-toolbar-title {font-size: 60%} #calendar {max-width: 85%;} .sidebar {width: 50px;}}
 @media screen and (max-width:720px) { .fc-toolbar.fc-header-toolbar {font-size: 55%} .fc-toolbar-title {font-size: 50%} #calendar {max-width: 95%;}}
 @media screen and (max-width:600px) { .fc-toolbar.fc-header-toolbar {font-size: 45%} .fc-toolbar-title {font-size: 45%} #calendar {max-width: 100%;}}
 /*.fc-today-button .fc-prev-button .fc-next-button*/
+/* navbar from https://github.com/fireship-io/222-responsive-icon-nav-css */ 
+*{
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+}
+
+#perfil , #about , #events , #overview , #painelControle {font-size: 0.75rem;}
+
+.sidebar{
+  position: fixed;
+  width: 240px;
+  left: -240px;
+  height: 100%;
+  background: #1e1e1e;
+  transition: all .5s ease;
+}
+.sidebar header{
+  font-size: 20px;
+  color: white;
+  line-height: 70px;
+  text-align: center;
+  background: #1b1b1b;
+  user-select: none;
+  font-family: 'Montserrat', sans-serif;
+}
+.sidebar a{
+  display: block;
+  height: 65px;
+  width: 100%;
+  color: white;
+  line-height: 65px;
+  padding-left: 30px;
+  box-sizing: border-box;
+  border-bottom: 1px solid black;
+  border-top: 1px solid rgba(255,255,255,.1);
+  border-left: 5px solid transparent;
+  font-family: 'Open Sans', sans-serif;
+  transition: all .5s ease;
+}
+a.active,a:hover{
+  border-left: 5px solid #b93632;
+  color: #b93632;
+}
+.sidebar a i{
+  font-size: 23px;
+  margin-right: 16px;
+}
+.sidebar a span{
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+#check{
+  display: none;
+}
+label #btn,label #cancel{
+  position: absolute;
+  cursor: pointer;
+  color: white;
+  border-radius: 5px;
+  border: 1px solid #262626;
+  margin: 15px 30px;
+  font-size: 29px;
+  background: #262626;
+  height: 45px;
+  width: 45px;
+  text-align: center;
+  line-height: 45px;
+  transition: all .5s ease;
+}
+label #cancel{
+  opacity: 0;
+  visibility: hidden;
+}
+#check:checked ~ .sidebar{
+  left: 0;
+}
+#check:checked ~ label #btn{
+  margin-left: 245px;
+  opacity: 0;
+  visibility: hidden;
+}
+#check:checked ~ label #cancel{
+  margin-left: 245px;
+  opacity: 1;
+  visibility: visible;
+}
+
+@media(max-width : 1100px){
+  .sidebar{
+    height: 100%;
+    width: 80px;
+    left: 0;
+    margin: 0;
+    padding-top: 0;
+  }
+  header,#btn,#cancel{
+    display: none;
+  }
+  #perfil , #about , #events , #overview , #painelControle, #header{
+    position: absolute;
+    margin-left: 23px;
+    opacity: 0;
+    visibility: hidden;
+  }
+  #calendar {max-width: 80%;}
+}
+
+
+#rooms {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
