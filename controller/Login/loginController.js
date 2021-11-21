@@ -88,7 +88,7 @@ router.post("/login/check", (req,res) => {
                             id_usuario: obj.id,
                             email: obj.email
                         }, 
-                        process.env.JWT_KEY,
+                        "Secret",
                         {
                             expiresIn: "1h"
                         });                        

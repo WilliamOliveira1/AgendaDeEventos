@@ -213,8 +213,9 @@ function loadCalendar(calendarEvents) {
                         cancelButton: "btn btn-active-light"
                     }
                 }).then(function (result) {
+                    
                     if (result.value) {
-                        var title = document.querySelector('input[name="event_name"]').value;                        
+                        var title = $('#eventSelect').find(":selected").text();            
                         let calendarData = {
                             title: title,
                             start: arg.start,

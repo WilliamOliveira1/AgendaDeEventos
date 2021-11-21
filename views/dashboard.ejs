@@ -1,0 +1,67 @@
+<%- include('./partials/headAgenda') %>
+<% if(message == "true"){ %>
+    <div id="<%= idMessage %>" hidden>
+    </div>          
+<% } %>
+<div>
+    <input type="checkbox" id="check">
+    <label for="check">
+        <i class="fas fa-bars" id="btn"></i>
+        <i class="fas fa-times" id="cancel"></i>
+    </label>
+    <div class="sidebar">
+        <header id="header">Agenda de eventos</header>
+        <a href="/dashboard" class="active">
+            <i class="fas fa-qrcode" data-mdb-toggle="tooltip" data-mdb-placement="top" title="Dashboard"></i>
+            <span id="painelControle">Painel de controle</span>
+        </a>
+        <a href="/agenda">
+            <i class="fas fa-calendar" data-mdb-toggle="tooltip" data-mdb-placement="top" title="Events"></i>
+            <span id="events">Eventos</span>
+        </a>
+        <a href="#">
+            <i class="fas fa-stream" data-mdb-toggle="tooltip" data-mdb-placement="top" title="Overview"></i>
+            <span id="overview">Overview</span>
+        </a>
+        <a href="#">
+            <i class="fas fa-address-card" data-mdb-toggle="tooltip" data-mdb-placement="top" title="Perfil"></i>            
+            <span id="perfil">Perfil</span>
+        </a>
+        <a href="#">
+            <i class="far fa-question-circle" data-mdb-toggle="tooltip" data-mdb-placement="top"
+                title="About"></i>
+            <span id="about">Sobre</span>
+        </a>
+    </div>
+    <main class="ml-4 mr-0">
+        <div class="container" id="dashboardScreen">
+            <div class="row" id="dashboardContainer">
+                <h2 class="text-center">Sistema de Agendamento de eventos</h2>
+                <div class="col-">
+    
+                    <form class="mt-4" name="roomsForm" action="/rooms/save" method="POST">
+                        <div class="form-group m-2">
+                            <label class="m-2" for="InputRoom">Adicionar nova sala</label>
+                            <input type="text" class="form-control" id="InputRoom" placeholder="Digite o nome da sala"
+                                name="InputRoom" required>
+                            <div style="margin-top: 7px;" id="CheckInputRoom"></div>
+                        </div>
+                        <button type="submit" id="RegisterButton" class="btn btn-primary m-2">Cadastrar</button>
+                    </form>
+
+                    <form class="mt-4" name="roomsForm" action="/events/save" method="POST">
+                        <div class="form-group m-2">
+                            <label class="m-2" for="InputEvent">Adicionar novo evento</label>
+                            <input type="text" class="form-control" id="InputEvent" placeholder="Digite o nome do evento"
+                                name="InputEvent" required>
+                            <div style="margin-top: 7px;" id="CheckInputEvent"></div>
+                        </div>
+                        <button type="submit" id="RegisterButton" class="btn btn-primary m-2">Cadastrar</button>
+                    </form>
+                </div>            
+            </div>
+        </div>
+    </main>
+</div>
+
+<%- include('partials/footer'); %>

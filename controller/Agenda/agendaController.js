@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 const { application } = require("express");
 const authCheck = require('../../middleware/loginCheck')
 
-router.post("/agenda/save", authCheck, (req, res) => {
+router.post("/agenda/save", (req, res) => {
     let title = req.body.title;
     let start = req.body.start;
     let end = req.body.end;
