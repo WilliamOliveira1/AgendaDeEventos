@@ -2,18 +2,18 @@
   background-color: rgb(255, 255, 255);
 }
 
-#calendar {
+.calendar {
   max-width: 45%;
   margin: 0 auto;
 }
 
-@media screen and (max-width:1500px) { .fc-toolbar.fc-header-toolbar {font-size: 85%} .fc-toolbar-title {font-size: 95%} #calendar {max-width: 60%;}}
+@media screen and (max-width:1500px) { .fc-toolbar.fc-header-toolbar {font-size: 85%} .fc-toolbar-title {font-size: 95%} .calendar {max-width: 60%;}}
 @media screen and (max-width:1000px) { 
-  .fc-toolbar.fc-header-toolbar {font-size: 70%} .fc-toolbar-title {font-size: 70%} #calendar {max-width: 80%;} .sidebar {width: 50px;} 
+  .fc-toolbar.fc-header-toolbar {font-size: 70%} .fc-toolbar-title {font-size: 70%} .calendar {max-width: 80%;} .sidebar {width: 50px;} 
   #perfil , #about , #events , #overview , #painelControle {display: none;}}
-@media screen and (max-width:767px) { .fc-toolbar.fc-header-toolbar {font-size: 60%} .fc-toolbar-title {font-size: 60%} #calendar {max-width: 85%;} .sidebar {width: 50px;}}
-@media screen and (max-width:720px) { .fc-toolbar.fc-header-toolbar {font-size: 55%} .fc-toolbar-title {font-size: 50%} #calendar {max-width: 95%;}}
-@media screen and (max-width:600px) { .fc-toolbar.fc-header-toolbar {font-size: 45%} .fc-toolbar-title {font-size: 45%} #calendar {max-width: 100%;}}
+@media screen and (max-width:767px) { .fc-toolbar.fc-header-toolbar {font-size: 60%} .fc-toolbar-title {font-size: 60%} .calendar {max-width: 85%;} .sidebar {width: 50px;}}
+@media screen and (max-width:720px) { .fc-toolbar.fc-header-toolbar {font-size: 55%} .fc-toolbar-title {font-size: 50%} .calendar {max-width: 95%;}}
+@media screen and (max-width:600px) { .fc-toolbar.fc-header-toolbar {font-size: 45%} .fc-toolbar-title {font-size: 45%} .calendar {max-width: 100%;}}
 /*.fc-today-button .fc-prev-button .fc-next-button*/
 /* navbar from https://github.com/fireship-io/222-responsive-icon-nav-css */ 
 *{
@@ -120,7 +120,7 @@ label #cancel{
     opacity: 0;
     visibility: hidden;
   }
-  #calendar {max-width: 80%;}
+  .calendar {max-width: 80%;}
 }
 
 

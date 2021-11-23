@@ -5,7 +5,8 @@ $("input").keyup(function () {
     let loginPassField = $('#LoginInputPassword').val();
     let repeatpassField = $('#RepeatPassword').val();
     let emailTyped = $('#InputEmail').val();
-    var calendarEvents;
+    var calendarOptions = [];
+    var changecalendarOptions = [];
     
     if (passField?.length > 0 || repeatpassField?.length > 0) {
         passField.onchange = validatePassword;
@@ -176,8 +177,7 @@ function getAllEvents() {
 
 function loadCalendar(calendarEvents) {
     $(document).ready(function () {
-        console.log(calendarEvents);
-        var calendarEl = document.getElementById('calendar');
+        var calendarEl = document.getElementsByClassName('calendar')[0];
         var calendar = new FullCalendar.Calendar(calendarEl, {
             headerToolbar: {
                 end: 'today prev,next',
@@ -286,7 +286,6 @@ function loadCalendar(calendarEvents) {
     });   
 }
 
-//TODO adicionar salas de aula no banco de dados
 function renderclassRoomList(escola) {
 
     if(escola.length <= 0) {
@@ -298,10 +297,10 @@ function renderclassRoomList(escola) {
     }
 
     $("#roomSelect").append(lines);
+    renderCalendars();
     }    
 }
 
-//TODO adicionar salas de aula no banco de dados
 var eventsSaved = null;
 
 function renderEventsList(eventos) {
@@ -341,3 +340,165 @@ function getAllEventsList() {
 getAllEventsList();
 
 getAllRooms();
+
+
+$('#roomSelect').change(function() {
+    var selectCalendar = $('#roomSelect').find(":selected").text();
+    if (selectCalendar) {
+        console.log(selectCalendar);
+    }
+    let selectCalendarWithoutSpace = selectCalendar.replace(/\s/g, '');
+    console.log(calendarOptions);
+    changecalendarOptions = calendarOptions;
+
+    var index = changecalendarOptions.indexOf(selectCalendarWithoutSpace);
+    if (index !== -1) {
+        changecalendarOptions.splice(index, 1);
+    }
+
+    hideCalendars(changecalendarOptions, selectCalendarWithoutSpace);
+
+    changecalendarOptions.push(selectCalendarWithoutSpace);
+});
+
+function hideCalendars(array, selectedItem) {
+
+    for (var x = 0; x < array.length; x++) {
+        $(`#${array[x]}`).hide();        
+    }
+    $(`#${selectedItem}`).show();
+}
+
+var calendarEl = document.getElementsByClassName('calendar');
+
+function renderCalendars() {
+
+    let lines = "";
+
+    var domelts = $('#roomSelect option');
+    let domeltsWithoutSpace = [];
+
+    for (var i = 0; i < domelts.length; i++) {
+        domeltsWithoutSpace.push(domelts[i].innerText.replace(/\s/g, ''));
+        console.log(domeltsWithoutSpace[i]);
+        lines += `<div id="${domeltsWithoutSpace[i]}" class="calendar" ></div>`;
+    }
+    calendarOptions = domeltsWithoutSpace;
+
+    $("#calendars").append(lines);
+    renderAllCalendars();
+}
+
+
+function renderAllCalendars() {
+    
+    for (var i = 0; i < calendarOptions.length; i++) {
+            var calendarEl = $(`#${calendarOptions[i]}`)[0];
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                headerToolbar: {
+                    end: 'today prev,next',
+                    center: 'title',
+                    start: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+                },
+                selectable: true,
+                selectHelper: true,
+                editable: true,
+                eventLimit: true,
+                navLinks: true,
+                selectMirror: true,
+                locale: 'pt',
+                timeZone: 'America/New_York',
+                events: calendarEvents,
+                dateClick: function (arg) {
+                    console.log(arg.date.toUTCString()); // use *UTC* methods on the native Date Object
+                    // will output something like 'Sat, 01 Sep 2018 00:00:00 GMT'
+                },
+                
+                
+                // Create new event
+                select: function (arg) {
+                    Swal.fire({
+                        html: `<div class="mb-7">Agendar novo evento?</div><div class="fw-bolder mb-5">Nome do evento:</div><select id="eventSelect">${eventsSaved}</select>`,
+                        icon: "info",
+                        showCancelButton: true,
+                        buttonsStyling: false,
+                        confirmButtonText: "Sim, criar!",
+                        cancelButtonText: "Não, voltar",
+                        customClass: {
+                            confirmButton: "btn btn-primary save-agenda-data",
+                            cancelButton: "btn btn-active-light"
+                        }
+                    }).then(function (result) {
+                        
+                        if (result.value) {
+                            var title = $('#eventSelect').find(":selected").text();            
+                            let calendarData = {
+                                title: title,
+                                start: arg.start,
+                                startStr: arg.startStr,
+                                end: arg.end,
+                                endStr: arg.endStr,
+                                allDay: arg.allDay
+                            };
+                            saveData(calendarData);
+                            if (title) {
+                                calendar.addEvent({
+                                    title: title,
+                                    start: arg.start,
+                                    startStr: arg.startStr,
+                                    end: arg.end,
+                                    endStr: arg.endStr,
+                                    allDay: arg.allDay
+                                })
+                            }
+                            calendar.unselect()
+                        } else if (result.dismiss === "cancel") {
+                            Swal.fire({
+                                text: "Evento de agendamento não realizado!.",
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok!",
+                                customClass: {
+                                    confirmButton: "btn btn-primary",
+                                }
+                            });
+                        }
+                    });
+                },
+        
+                // Delete event
+                eventClick: function (arg) {
+                    Swal.fire({
+                        text: "Tem certeza que quer deletar esse evento?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        buttonsStyling: false,
+                        confirmButtonText: "Sim, delete!",
+                        cancelButtonText: "Não, voltar",
+                        customClass: {
+                            confirmButton: "btn btn-primary",
+                            cancelButton: "btn btn-active-light"
+                        }
+                    }).then(function (result) {
+                        if (result.value) {
+                            arg.event.remove()
+                        } else if (result.dismiss === "cancel") {
+                            Swal.fire({
+                                text: "Evento não foi deletado!.",
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok!",
+                                customClass: {
+                                    confirmButton: "btn btn-primary",
+                                }
+                            });
+                        }
+                    });
+                },
+                editable: true,
+                dayMaxEvents: true, // allow "more" link when too many events
+            });
+            calendar.render();
+    }
+    hideCalendars(calendarOptions, calendarOptions[0]);
+}
