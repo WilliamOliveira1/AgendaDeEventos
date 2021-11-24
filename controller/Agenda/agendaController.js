@@ -57,10 +57,30 @@ router.post("/api/eventosagendaporsala", (req, res) => {
     Agenda.findAll({where: {
         room: room
     }}).then(eventos => {
-        console.log(eventos);
         res.json(eventos);
     });    
 });
 
+
+router.post("/api/deleteEventById", (req, res) => {
+    var id = req.body.room;
+    console.log(id);
+    if(id !== undefined) {
+        if(!isNaN(id)) {
+            Agenda.destroy({
+                where: {
+                    id: id
+                }
+            }).then(() => {
+                console.log("id: " + id);
+            });
+        }else {
+            console.log("id " + id + "is not a number!");
+        }
+    }else {
+        console.log("id " + id + "is undefined!");
+        res.redirect("/admin/categories");
+    }
+});
 
 module.exports = router;

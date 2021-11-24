@@ -302,6 +302,7 @@ function renderAllCalendars(calendarEvents) {
 
     for (var i = 0; i < calendarOptions.length; i++) {
         let eventFromRooms = calendarEvents;
+        let lastEventId = eventFromRooms.length;
 
         var calendarEl = $(`#${calendarOptions[i]}`)[0];
         var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -324,7 +325,6 @@ function renderAllCalendars(calendarEvents) {
                 // will output something like 'Sat, 01 Sep 2018 00:00:00 GMT'
             },
 
-
             // Create new event
             select: function (arg) {
                 Swal.fire({
@@ -339,11 +339,11 @@ function renderAllCalendars(calendarEvents) {
                         cancelButton: "btn btn-active-light"
                     }
                 }).then(function (result) {
-                    console.log(result.id);
-                    alert(result._id);
+                    
                     if (result.value) {
                         var title = $('#eventSelect').find(":selected").text();
                         let calendarData = {
+                            idCheck: lastEventId+1,
                             title: title,
                             start: arg.start,
                             startStr: arg.startStr,
@@ -352,9 +352,11 @@ function renderAllCalendars(calendarEvents) {
                             allDay: arg.allDay,
                             room: $('#roomSelect').find(":selected").text().replace(/\s/g, '')
                         };
+                        lastEventId++;
                         saveData(calendarData);
                         if (title) {
                             calendar.addEvent({
+                                id: lastEventId,
                                 title: title,
                                 start: arg.start,
                                 startStr: arg.startStr,
@@ -394,6 +396,7 @@ function renderAllCalendars(calendarEvents) {
                 }).then(function (result) {
                     if (result.value) {
                         arg.event.remove()
+                        deleteEvent(arg.event._def.publicId);
                     } else if (result.dismiss === "cancel") {
                         Swal.fire({
                             text: "Evento não foi deletado!.",
@@ -420,14 +423,16 @@ function renderAllCalendars(calendarEvents) {
     isCalendarLoaded = true;
 }
 
-var isCalendarLoaded = false;
+function deleteEvent(args) {
+    let obj = {room: args}
+    $.ajax({
+        url: `${BaseApiUrl()}/api/deleteEventById`,
+        type: "POST",
+        dataType: 'json',
+        data: obj
+    }).done(function (data) {
+        console.log("Event deleted");
+    })
+}
 
-function eventFire(el, etype){
-    if (el.fireEvent) {
-      el.fireEvent('on' + etype);
-    } else {
-      var evObj = document.createEvent('Events');
-      evObj.initEvent(etype, true, false);
-      el.dispatchEvent(evObj);
-    }
-  }
+var isCalendarLoaded = false;
