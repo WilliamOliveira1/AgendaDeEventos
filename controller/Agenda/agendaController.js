@@ -46,6 +46,11 @@ router.post("/agenda/save", (req, res) => {
 
 router.get("/api/eventosagenda", (req, res) => {
     Agenda.findAll().then(eventos => {
+        let objLenght = getObjSize(eventos);
+        for(var i = 0; i < objLenght; i++) {
+            eventos[i].dataValues.title = eventos[i].dataValues.room + "-" + eventos[i].dataValues.title
+        }
+        console.log("Fora");
         res.json(eventos);
     });    
 });
@@ -53,6 +58,7 @@ router.get("/api/eventosagenda", (req, res) => {
 router.post("/api/eventosagendaporsala", (req, res) => {
     let room = req.body.room;
     console.log(req.body.room);
+    console.log("sala: " + req.body.room);
 
     Agenda.findAll({where: {
         room: room
@@ -82,5 +88,14 @@ router.post("/api/deleteEventById", (req, res) => {
         res.redirect("/admin/categories");
     }
 });
+
+function getObjSize(obj) {
+    var size = 0,
+      key;
+    for (key in obj) {
+      if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+  };
 
 module.exports = router;

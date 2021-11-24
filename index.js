@@ -54,6 +54,13 @@ app.get('/dashboard', (req, res) => {
   });
 })
 
+app.get('/overview', (req, res) => {
+  let message = "false";
+  res.render('overview', {
+    message: message
+  });
+})
+
 app.listen(8080, (error) => {
   if(error) {
     console.error("The server caught an error: " + error);

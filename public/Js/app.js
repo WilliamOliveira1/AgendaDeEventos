@@ -278,8 +278,6 @@ function hideCalendars(array, selectedItem) {
     }
 }
 
-var calendarEl = document.getElementsByClassName('calendar');
-
 function renderCalendars() {
 
     let lines = "";
