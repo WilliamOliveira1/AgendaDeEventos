@@ -12,6 +12,8 @@ router.post("/agenda/save", (req, res) => {
     let start = req.body.start;
     let end = req.body.end;
     let allDay = req.body.allDay;
+    let room  = req.body.room;
+
     let idMessage;
     console.log("agenda save data");
 
@@ -28,7 +30,8 @@ router.post("/agenda/save", (req, res) => {
             title: title,
             start: start,
             end: end,
-            allDay: allDay
+            allDay: allDay,
+            room: room
         }).then(() => {
             message = "true";
             idMessage = "userCreated"
@@ -46,5 +49,18 @@ router.get("/api/eventosagenda", (req, res) => {
         res.json(eventos);
     });    
 });
+
+router.post("/api/eventosagendaporsala", (req, res) => {
+    let room = req.body.room;
+    console.log(req.body.room);
+
+    Agenda.findAll({where: {
+        room: room
+    }}).then(eventos => {
+        console.log(eventos);
+        res.json(eventos);
+    });    
+});
+
 
 module.exports = router;

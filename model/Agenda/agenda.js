@@ -24,6 +24,10 @@ const Agenda = connection.define( database, {
     allDay: {
         type: Sequelize.BOOLEAN,
         allowNull: false
+    },
+    room: {
+        type: Sequelize.TEXT,
+        allowNull: false
     }
 });  
 

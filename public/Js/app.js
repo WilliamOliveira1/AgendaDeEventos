@@ -7,7 +7,9 @@ $("input").keyup(function () {
     let emailTyped = $('#InputEmail').val();
     var calendarOptions = [];
     var changecalendarOptions = [];
+    var calendarEvents;
     
+
     if (passField?.length > 0 || repeatpassField?.length > 0) {
         passField.onchange = validatePassword;
         repeatpassField.onkeyup = validatePassword;
@@ -142,27 +144,27 @@ if ($('#roomExist').length) {
     toastr.success('Ja existe uma sala com esse nome! Salve com outro nome.')
 }
 
-getAllEvents();
+
 
 function initCalendar(data) {
     calendarEvents = data;
-    loadCalendar(calendarEvents);
+    renderAllCalendars(calendarEvents);
 }
 
-function saveData(args) {    
-        $.ajax({
-            url: `${BaseApiUrl()}/agenda/save`,
-            type: "POST",
-            data: args            
-        }).then(response => {
-            console.log("Event saved!");
-        }).catch(error => {
-            console.error(error);
-        }) ;
+function saveData(args) {
+    $.ajax({
+        url: `${BaseApiUrl()}/agenda/save`,
+        type: "POST",
+        data: args
+    }).then(response => {
+        console.log("Event saved!");
+    }).catch(error => {
+        console.error(error);
+    });
 }
 
 function BaseApiUrl() {
-    return window.location.origin;        
+    return window.location.origin;
 }
 
 function getAllEvents() {
@@ -175,36 +177,47 @@ function getAllEvents() {
     })
 }
 
+function getAllEventsAfterLoaded(args) {
+    $.ajax({
+        url: `${BaseApiUrl()}/api/eventosagendaporsala`,
+        type: "POST",
+        dataType: 'json',
+        data: args
+    }).done(function (data) {
+        return initCalendar(data);
+    })
+}
+
 function renderclassRoomList(escola) {
 
-    if(escola.length <= 0) {
+    if (escola.length <= 0) {
         toastr.error('Não tem salas cadastradas, por favor cadastre salas para salvar eventos.')
-    }else {
+    } else {
         let lines = "";
-    for (var i = 0; i < escola.length; i++) {
-        lines += `<option value="sala${i+1}">${escola[i].Nome}</option>`;
-    }
+        for (var i = 0; i < escola.length; i++) {
+            lines += `<option value="sala${i + 1}">${escola[i].Nome}</option>`;
+        }
 
-    $("#roomSelect").append(lines);
-    renderCalendars();
-    }    
+        $("#roomSelect").append(lines);
+        renderCalendars();
+    }
 }
 
 var eventsSaved = null;
 
 function renderEventsList(eventos) {
 
-    if(eventos.length <= 0) {
+    if (eventos.length <= 0) {
         toastr.error('Não tem Eventos cadastrados, por favor cadastre eventos na aba dashboard.')
-    }else {
+    } else {
         let lines = "";
-    for (var i = 0; i < eventos.length; i++) {
-        lines += `<option name="event_name" value="sala${i+1}">${eventos[i].event}</option>`;
-    }
+        for (var i = 0; i < eventos.length; i++) {
+            lines += `<option name="event_name" value="sala${i + 1}">${eventos[i].event}</option>`;
+        }
 
-    $("#eventSelect").append(lines);
-    eventsSaved = lines;
-    }    
+        $("#eventSelect").append(lines);
+        eventsSaved = lines;
+    }
 }
 
 function getAllRooms() {
@@ -226,17 +239,18 @@ function getAllEventsList() {
         return renderEventsList(data);
     })
 }
-getAllEventsList();
+
 
 getAllRooms();
 
 
-$('#roomSelect').change(function() {
+$('#roomSelect').change(function () {
     var selectCalendar = $('#roomSelect').find(":selected").text();
     if (selectCalendar) {
         console.log(selectCalendar);
     }
     let selectCalendarWithoutSpace = selectCalendar.replace(/\s/g, '');
+
     console.log(calendarOptions);
     changecalendarOptions = calendarOptions;
 
@@ -245,17 +259,23 @@ $('#roomSelect').change(function() {
         changecalendarOptions.splice(index, 1);
     }
 
-    hideCalendars(changecalendarOptions, selectCalendarWithoutSpace);
-
+    hideCalendars(changecalendarOptions, selectCalendarWithoutSpace);    
     changecalendarOptions.push(selectCalendarWithoutSpace);
+    let setArgs = {room: selectCalendarWithoutSpace};
+    getAllEventsAfterLoaded(setArgs);
 });
 
 function hideCalendars(array, selectedItem) {
 
+    let isCalendarLoadedh = this.isCalendarLoaded;    
+    
     for (var x = 0; x < array.length; x++) {
-        $(`#${array[x]}`).hide();        
+        $(`#${array[x]}`).hide();
     }
     $(`#${selectedItem}`).show();
+    if(isCalendarLoadedh) {
+        $(".fc-dayGridMonth-button").click();
+    }
 }
 
 var calendarEl = document.getElementsByClassName('calendar');
@@ -273,121 +293,141 @@ function renderCalendars() {
         lines += `<div id="${domeltsWithoutSpace[i]}" class="calendar" ></div>`;
     }
     calendarOptions = domeltsWithoutSpace;
-
+    getAllEvents();
     $("#calendars").append(lines);
-    renderAllCalendars();
 }
 
 
-function renderAllCalendars() {
-    
+function renderAllCalendars(calendarEvents) {
+
     for (var i = 0; i < calendarOptions.length; i++) {
-            var calendarEl = $(`#${calendarOptions[i]}`)[0];
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                headerToolbar: {
-                    end: 'today prev,next',
-                    center: 'title',
-                    start: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
-                },
-                selectable: true,
-                selectHelper: true,
-                editable: true,
-                eventLimit: true,
-                navLinks: true,
-                selectMirror: true,
-                locale: 'pt',
-                timeZone: 'America/New_York',
-                events: calendarEvents,
-                dateClick: function (arg) {
-                    console.log(arg.date.toUTCString()); // use *UTC* methods on the native Date Object
-                    // will output something like 'Sat, 01 Sep 2018 00:00:00 GMT'
-                },
-                
-                
-                // Create new event
-                select: function (arg) {
-                    Swal.fire({
-                        html: `<div class="mb-7">Agendar novo evento?</div><div class="fw-bolder mb-5">Nome do evento:</div><select id="eventSelect">${eventsSaved}</select>`,
-                        icon: "info",
-                        showCancelButton: true,
-                        buttonsStyling: false,
-                        confirmButtonText: "Sim, criar!",
-                        cancelButtonText: "Não, voltar",
-                        customClass: {
-                            confirmButton: "btn btn-primary save-agenda-data",
-                            cancelButton: "btn btn-active-light"
-                        }
-                    }).then(function (result) {
-                        
-                        if (result.value) {
-                            var title = $('#eventSelect').find(":selected").text();            
-                            let calendarData = {
+        let eventFromRooms = calendarEvents;
+
+        var calendarEl = $(`#${calendarOptions[i]}`)[0];
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            headerToolbar: {
+                end: 'today prev,next',
+                center: 'title',
+                start: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+            },
+            selectable: true,
+            selectHelper: true,
+            editable: true,
+            eventLimit: true,
+            navLinks: true,
+            selectMirror: true,
+            locale: 'pt',
+            timeZone: 'America/New_York',
+            events: calendarEvents,
+            dateClick: function (arg) {
+                console.log(arg.date.toUTCString()); // use *UTC* methods on the native Date Object
+                // will output something like 'Sat, 01 Sep 2018 00:00:00 GMT'
+            },
+
+
+            // Create new event
+            select: function (arg) {
+                Swal.fire({
+                    html: `<div class="mb-7">Agendar novo evento?</div><div class="fw-bolder mb-5">Nome do evento:</div><select id="eventSelect">${eventsSaved}</select>`,
+                    icon: "info",
+                    showCancelButton: true,
+                    buttonsStyling: false,
+                    confirmButtonText: "Sim, criar!",
+                    cancelButtonText: "Não, voltar",
+                    customClass: {
+                        confirmButton: "btn btn-primary save-agenda-data",
+                        cancelButton: "btn btn-active-light"
+                    }
+                }).then(function (result) {
+                    console.log(result.id);
+                    alert(result._id);
+                    if (result.value) {
+                        var title = $('#eventSelect').find(":selected").text();
+                        let calendarData = {
+                            title: title,
+                            start: arg.start,
+                            startStr: arg.startStr,
+                            end: arg.end,
+                            endStr: arg.endStr,
+                            allDay: arg.allDay,
+                            room: $('#roomSelect').find(":selected").text().replace(/\s/g, '')
+                        };
+                        saveData(calendarData);
+                        if (title) {
+                            calendar.addEvent({
                                 title: title,
                                 start: arg.start,
                                 startStr: arg.startStr,
                                 end: arg.end,
                                 endStr: arg.endStr,
                                 allDay: arg.allDay
-                            };
-                            saveData(calendarData);
-                            if (title) {
-                                calendar.addEvent({
-                                    title: title,
-                                    start: arg.start,
-                                    startStr: arg.startStr,
-                                    end: arg.end,
-                                    endStr: arg.endStr,
-                                    allDay: arg.allDay
-                                })
+                            })
+                        }
+                        calendar.unselect()
+                    } else if (result.dismiss === "cancel") {
+                        Swal.fire({
+                            text: "Evento de agendamento não realizado!.",
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok!",
+                            customClass: {
+                                confirmButton: "btn btn-primary",
                             }
-                            calendar.unselect()
-                        } else if (result.dismiss === "cancel") {
-                            Swal.fire({
-                                text: "Evento de agendamento não realizado!.",
-                                icon: "error",
-                                buttonsStyling: false,
-                                confirmButtonText: "Ok!",
-                                customClass: {
-                                    confirmButton: "btn btn-primary",
-                                }
-                            });
-                        }
-                    });
-                },
-        
-                // Delete event
-                eventClick: function (arg) {
-                    Swal.fire({
-                        text: "Tem certeza que quer deletar esse evento?",
-                        icon: "warning",
-                        showCancelButton: true,
-                        buttonsStyling: false,
-                        confirmButtonText: "Sim, delete!",
-                        cancelButtonText: "Não, voltar",
-                        customClass: {
-                            confirmButton: "btn btn-primary",
-                            cancelButton: "btn btn-active-light"
-                        }
-                    }).then(function (result) {
-                        if (result.value) {
-                            arg.event.remove()
-                        } else if (result.dismiss === "cancel") {
-                            Swal.fire({
-                                text: "Evento não foi deletado!.",
-                                icon: "error",
-                                buttonsStyling: false,
-                                confirmButtonText: "Ok!",
-                                customClass: {
-                                    confirmButton: "btn btn-primary",
-                                }
-                            });
-                        }
-                    });
-                },
-                editable: true,
-                dayMaxEvents: true, // allow "more" link when too many events
-            });
-            calendar.render();
+                        });
+                    }
+                });
+            },
+
+            // Delete event
+            eventClick: function (arg) {
+                Swal.fire({
+                    text: "Tem certeza que quer deletar esse evento?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    buttonsStyling: false,
+                    confirmButtonText: "Sim, delete!",
+                    cancelButtonText: "Não, voltar",
+                    customClass: {
+                        confirmButton: "btn btn-primary",
+                        cancelButton: "btn btn-active-light"
+                    }
+                }).then(function (result) {
+                    if (result.value) {
+                        arg.event.remove()
+                    } else if (result.dismiss === "cancel") {
+                        Swal.fire({
+                            text: "Evento não foi deletado!.",
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok!",
+                            customClass: {
+                                confirmButton: "btn btn-primary",
+                            }
+                        });
+                    }
+                });
+            },
+            editable: true,
+            dayMaxEvents: true, // allow "more" link when too many events
+        });
+        calendar.render();
     }
-    hideCalendars(calendarOptions, calendarOptions[0]);
+    getAllEventsList();
+    let isCalendarLoadedz = this.isCalendarLoaded;
+    if(!isCalendarLoadedz) {
+        hideCalendars(calendarOptions, calendarOptions[0]);
+    }    
+    isCalendarLoaded = true;
 }
+
+var isCalendarLoaded = false;
+
+function eventFire(el, etype){
+    if (el.fireEvent) {
+      el.fireEvent('on' + etype);
+    } else {
+      var evObj = document.createEvent('Events');
+      evObj.initEvent(etype, true, false);
+      el.dispatchEvent(evObj);
+    }
+  }
