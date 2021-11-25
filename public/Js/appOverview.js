@@ -1,25 +1,10 @@
-toastr.options = {
-    "closeButton": true,
-    "debug": false,
-    "newestOnTop": true,
-    "progressBar": true,
-    "positionClass": "toast-bottom-full-width",
-    "preventDuplicates": true,
-    "showDuration": "90000",
-    "hideDuration": "1000",
-    "timeOut": "5000",
-    "extendedTimeOut": "1000",
-    "showEasing": "swing",
-    "hideEasing": "linear",
-    "showMethod": "fadeIn",
-    "hideMethod": "fadeOut"
-}
+
 
 getAllEvents();
 
 function initCalendar(data) {
     calendarEvents = data;
-    loadCalendar(calendarEvents);
+    loadCalendar(calendarEvents);    
 }
 
 function BaseApiUrl() {
@@ -64,5 +49,6 @@ function loadCalendar(calendarEvents) {
             dayMaxEvents: true, // allow "more" link when too many events
         });
         calendar.render();
-    });   
+        $(".fc-listMonth-button").click();
+    });    
 }

@@ -1,3 +1,28 @@
+var calendarOptions = [];
+var changecalendarOptions = [];
+var calendarEvents;
+
+function changeSelect(option) {
+    $('#roomSelect option').eq(0).prop('selected', true);
+    changeLoaded();
+}
+
+function changeLoaded() {
+    var selectCalendar = $('#roomSelect').find(":selected").text();
+    let selectCalendarWithoutSpace = selectCalendar.replace(/\s/g, '');
+    changecalendarOptions = calendarOptions;
+
+    var index = changecalendarOptions.indexOf(selectCalendarWithoutSpace);
+    if (index !== -1) {
+        changecalendarOptions.splice(index, 1);
+    }
+
+    hideCalendars(changecalendarOptions, selectCalendarWithoutSpace);
+    changecalendarOptions.push(selectCalendarWithoutSpace);
+    let setArgs = { room: selectCalendarWithoutSpace };
+    getAllEventsAfterLoaded(setArgs);
+};
+
 $("input").keyup(function () {
     let userField = $('#InputUser').val();
     let passField = $('#InputPassword').val();
@@ -5,10 +30,7 @@ $("input").keyup(function () {
     let loginPassField = $('#LoginInputPassword').val();
     let repeatpassField = $('#RepeatPassword').val();
     let emailTyped = $('#InputEmail').val();
-    var calendarOptions = [];
-    var changecalendarOptions = [];
-    var calendarEvents;
-    
+
 
     if (passField?.length > 0 || repeatpassField?.length > 0) {
         passField.onchange = validatePassword;
@@ -167,16 +189,6 @@ function BaseApiUrl() {
     return window.location.origin;
 }
 
-function getAllEvents() {
-    $.ajax({
-        url: `${BaseApiUrl()}/api/eventosagenda`,
-        type: "GET",
-        dataType: 'json'
-    }).done(function (data) {
-        return initCalendar(data);
-    })
-}
-
 function getAllEventsAfterLoaded(args) {
     $.ajax({
         url: `${BaseApiUrl()}/api/eventosagendaporsala`,
@@ -240,18 +252,11 @@ function getAllEventsList() {
     })
 }
 
-
 getAllRooms();
-
 
 $('#roomSelect').change(function () {
     var selectCalendar = $('#roomSelect').find(":selected").text();
-    if (selectCalendar) {
-        console.log(selectCalendar);
-    }
     let selectCalendarWithoutSpace = selectCalendar.replace(/\s/g, '');
-
-    console.log(calendarOptions);
     changecalendarOptions = calendarOptions;
 
     var index = changecalendarOptions.indexOf(selectCalendarWithoutSpace);
@@ -259,21 +264,21 @@ $('#roomSelect').change(function () {
         changecalendarOptions.splice(index, 1);
     }
 
-    hideCalendars(changecalendarOptions, selectCalendarWithoutSpace);    
+    hideCalendars(changecalendarOptions, selectCalendarWithoutSpace);
     changecalendarOptions.push(selectCalendarWithoutSpace);
-    let setArgs = {room: selectCalendarWithoutSpace};
+    let setArgs = { room: selectCalendarWithoutSpace };
     getAllEventsAfterLoaded(setArgs);
 });
 
 function hideCalendars(array, selectedItem) {
 
-    let isCalendarLoadedh = this.isCalendarLoaded;    
-    
+    let isCalendarLoadedh = this.isCalendarLoaded;
+
     for (var x = 0; x < array.length; x++) {
         $(`#${array[x]}`).hide();
     }
     $(`#${selectedItem}`).show();
-    if(isCalendarLoadedh) {
+    if (isCalendarLoadedh) {
         $(".fc-dayGridMonth-button").click();
     }
 }
@@ -287,14 +292,23 @@ function renderCalendars() {
 
     for (var i = 0; i < domelts.length; i++) {
         domeltsWithoutSpace.push(domelts[i].innerText.replace(/\s/g, ''));
-        console.log(domeltsWithoutSpace[i]);
         lines += `<div id="${domeltsWithoutSpace[i]}" class="calendar" ></div>`;
     }
     calendarOptions = domeltsWithoutSpace;
+
     getAllEvents();
     $("#calendars").append(lines);
 }
 
+function getAllEvents() {
+    $.ajax({
+        url: `${BaseApiUrl()}/api/eventosagenda`,
+        type: "GET",
+        dataType: 'json'
+    }).done(function (data) {
+        return initCalendar(data);
+    })
+}
 
 function renderAllCalendars(calendarEvents) {
 
@@ -310,18 +324,12 @@ function renderAllCalendars(calendarEvents) {
                 start: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
             },
             selectable: true,
-            selectHelper: true,
             editable: true,
-            eventLimit: true,
             navLinks: true,
             selectMirror: true,
             locale: 'pt',
             timeZone: 'America/New_York',
             events: calendarEvents,
-            dateClick: function (arg) {
-                console.log(arg.date.toUTCString()); // use *UTC* methods on the native Date Object
-                // will output something like 'Sat, 01 Sep 2018 00:00:00 GMT'
-            },
 
             // Create new event
             select: function (arg) {
@@ -337,11 +345,11 @@ function renderAllCalendars(calendarEvents) {
                         cancelButton: "btn btn-active-light"
                     }
                 }).then(function (result) {
-                    
+
                     if (result.value) {
                         var title = $('#eventSelect').find(":selected").text();
                         let calendarData = {
-                            idCheck: lastEventId+1,
+                            idCheck: lastEventId + 1,
                             title: title,
                             start: arg.start,
                             startStr: arg.startStr,
@@ -413,16 +421,22 @@ function renderAllCalendars(calendarEvents) {
         });
         calendar.render();
     }
+
     getAllEventsList();
     let isCalendarLoadedz = this.isCalendarLoaded;
-    if(!isCalendarLoadedz) {
+    if (!isCalendarLoadedz) {
         hideCalendars(calendarOptions, calendarOptions[0]);
-    }    
+    }
+
     isCalendarLoaded = true;
 }
 
+function setSelector(option) {    
+    changeSelect(option)
+}
+
 function deleteEvent(args) {
-    let obj = {room: args}
+    let obj = { room: args }
     $.ajax({
         url: `${BaseApiUrl()}/api/deleteEventById`,
         type: "POST",
@@ -434,3 +448,12 @@ function deleteEvent(args) {
 }
 
 var isCalendarLoaded = false;
+
+jQuery(document).ready(function() {
+    setTimeout(function() {
+        if (isCalendarLoaded) {
+            console.log(calendarOptions[1]);
+            setSelector(calendarOptions[1]);
+        }
+    }, 1500);
+});

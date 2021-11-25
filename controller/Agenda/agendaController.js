@@ -48,7 +48,7 @@ router.get("/api/eventosagenda", (req, res) => {
     Agenda.findAll().then(eventos => {
         let objLenght = getObjSize(eventos);
         for(var i = 0; i < objLenght; i++) {
-            eventos[i].dataValues.title = eventos[i].dataValues.room + "-" + eventos[i].dataValues.title
+            eventos[i].dataValues.title = eventos[i].dataValues.room + " - " + eventos[i].dataValues.title
         }
         console.log("Fora");
         res.json(eventos);
